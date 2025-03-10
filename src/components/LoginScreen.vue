@@ -2,7 +2,6 @@
     <div
         class="min-h-screen flex items-center justify-center bg-gray-900 text-gray-100 p-4"
         @keydown="handleKeydown"
-        ref="loginScreenRef"
         tabindex="0"
     >
         <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -76,6 +75,7 @@
                                 v-model="password"
                                 class="w-full px-3 py-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 pr-10"
                                 required
+                                ref="passwordInputRef"
                             />
                             <button
                                 type="button"
@@ -195,7 +195,7 @@ const showPassword = ref(false);
 const isLoading = ref(false);
 const message = ref({ type: "info", text: "" });
 const emit = defineEmits(["enter-welcome"]);
-const loginScreenRef = ref<HTMLElement | null>(null);
+const passwordInputRef = ref<HTMLElement | null>(null);
 const config = ref(new Config());
 const getConfig = async () => {
     let _config: Config;
@@ -355,8 +355,8 @@ watch(
 onMounted(async () => {
     await fetchUsers();
     await fetchSessions();
-    if (loginScreenRef.value) {
-        loginScreenRef.value.focus();
+    if (passwordInputRef.value) {
+        passwordInputRef.value.focus();
     }
     await getConfig();
     document.documentElement.lang = config.value.lang;
