@@ -4,6 +4,7 @@
         @keydown="handleKeydown"
         tabindex="0"
     >
+        <PowerButtons />
         <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-lg overflow-hidden">
             <div class="p-8">
                 <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
@@ -169,6 +170,7 @@ import {
     AlertTriangleIcon,
     InfoIcon,
 } from "lucide-vue-next";
+import PowerButtons from "./PowerButtons.vue";
 import {
     GetSessions,
     GetUserAvatar,

@@ -22,6 +22,14 @@ export function ReadConfig() {
   return window['go']['main']['App']['ReadConfig']();
 }
 
+export function Reboot() {
+  return window['go']['main']['App']['Reboot']();
+}
+
 export function SaveConfig(arg1) {
   return window['go']['main']['App']['SaveConfig'](arg1);
+}
+
+export function Shutdown() {
+  return window['go']['main']['App']['Shutdown']();
 }

@@ -13,4 +13,8 @@ export function Login(arg1:string,arg2:string,arg3:string):Promise<void>;
 
 export function ReadConfig():Promise<any>;
 
+export function Reboot():Promise<void>;
+
 export function SaveConfig(arg1:any):Promise<void>;
+
+export function Shutdown():Promise<void>;
