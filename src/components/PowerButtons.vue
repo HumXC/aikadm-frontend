@@ -1,20 +1,20 @@
 <template>
-    <div class="power-buttons-container">
+    <div class="fixed top-4 right-4 flex gap-3 z-50">
         <button
-            class="power-button"
+            class="flex items-center justify-center w-10 h-10 rounded-full !bg-transparent text-gray-400 hover:bg-gray-800/50 hover:text-gray-100 focus:bg-gray-800/50 focus:text-gray-100 focus:outline-none transition-all duration-200 hover:scale-105 active:scale-95"
             @click="handleShutdown"
             title="Shutdown"
             aria-label="Shutdown system"
         >
-            <PowerIcon class="icon" />
+            <PowerIcon class="w-5 h-5" />
         </button>
         <button
-            class="power-button"
-            @click="handleReboot"
-            title="Reboot"
-            aria-label="Reboot system"
+            class="flex items-center justify-center w-10 h-10 rounded-full !bg-transparent text-gray-400 hover:bg-gray-800/50 hover:text-gray-100 focus:bg-gray-800/50 focus:text-gray-100 focus:outline-none transition-all duration-200 hover:scale-105 active:scale-95"
+            @click="handleRestart"
+            title="Restart"
+            aria-label="Restart system"
         >
-            <RefreshCwIcon class="icon" />
+            <RefreshCwIcon class="w-5 h-5" />
         </button>
     </div>
 </template>
@@ -31,53 +31,11 @@ const handleShutdown = async () => {
     }
 };
 
-const handleReboot = async () => {
+const handleRestart = async () => {
     try {
         await Reboot();
     } catch (error) {
-        console.error("Failed to reboot:", error);
+        console.error("Failed to restart:", error);
     }
 };
 </script>
-
-<style scoped>
-.power-buttons-container {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.75rem;
-    z-index: 10;
-}
-
-.power-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 9999px;
-    background-color: transparent;
-    color: rgba(156, 163, 175, 0.8);
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.power-button:hover,
-.power-button:focus {
-    background-color: rgba(55, 65, 81, 0.5);
-    color: rgba(243, 244, 246, 1);
-    transform: scale(1.05);
-    outline: none;
-}
-
-.power-button:active {
-    transform: scale(0.95);
-}
-
-.icon {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-</style>

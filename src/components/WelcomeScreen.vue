@@ -22,28 +22,29 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { MousePointerClickIcon } from "lucide-vue-next";
-
+import { Config, getConfig } from "../config";
 const emit = defineEmits(["enter-login"]);
-const welcomeScreenRef = ref(null);
+const welcomeScreenRef = ref<HTMLElement | null>(null);
 const currentTime = ref("");
 const currentDate = ref("");
-let timeInterval = null;
+const config = ref(new Config());
+let timeInterval: any = null;
 
 const updateDateTime = () => {
     const now = new Date();
 
     // Format time: HH:MM
-    currentTime.value = now.toLocaleTimeString(undefined, {
+    currentTime.value = now.toLocaleTimeString(config.value.lang, {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
     });
 
     // Format date: Weekday, Month Day, Year
-    currentDate.value = now.toLocaleDateString(undefined, {
+    currentDate.value = now.toLocaleDateString(config.value.lang, {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -61,7 +62,11 @@ const handleKeydown = (event) => {
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
+    config.value = await getConfig();
+    document.documentElement.lang = config.value.lang;
+    let zoom = config.value.zoom;
+    document.documentElement.style.fontSize = `${zoom * 16}px`;
     // Update time immediately
     updateDateTime();
 

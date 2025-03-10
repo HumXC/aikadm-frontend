@@ -1,10 +1,11 @@
 <template>
     <div
-        class="min-h-screen flex items-center justify-center bg-gray-900 text-gray-100 p-4"
+        class="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-gray-100 p-4"
         @keydown="handleKeydown"
         tabindex="0"
     >
         <PowerButtons />
+        <ZoomControl />
         <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-lg overflow-hidden">
             <div class="p-8">
                 <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
@@ -171,21 +172,10 @@ import {
     InfoIcon,
 } from "lucide-vue-next";
 import PowerButtons from "./PowerButtons.vue";
-import {
-    GetSessions,
-    GetUserAvatar,
-    GetUsers,
-    Login,
-    ReadConfig,
-    SaveConfig,
-} from "../wailsjs/go/main/App";
+import ZoomControl from "./ZoomControl.vue";
+import { GetSessions, GetUserAvatar, GetUsers, Login } from "../wailsjs/go/main/App";
 import { Quit } from "../wailsjs/runtime/runtime";
-class Config {
-    id: string = "github.com/HumXC/html-greet-frontend";
-    defaultUsername: string = "";
-    defaultSession: string = "";
-    lang: string = "en";
-}
+import { Config, getConfig, saveConfig } from "../config";
 // State
 const users = ref<{ id: number; username: string }[]>([]);
 const sessions = ref<{ id: number; name: string }[]>([]);
@@ -199,26 +189,7 @@ const message = ref({ type: "info", text: "" });
 const emit = defineEmits(["enter-welcome"]);
 const passwordInputRef = ref<HTMLElement | null>(null);
 const config = ref(new Config());
-const getConfig = async () => {
-    let _config: Config;
-    try {
-        _config = await ReadConfig();
-    } catch (e) {
-        console.error("Error reading config:", e);
-        return;
-    }
-    if (!_config || _config.id !== config.value.id) {
-        return;
-    }
-    config.value = _config;
-};
-const saveConfig = async () => {
-    try {
-        await SaveConfig(config.value);
-    } catch (e) {
-        console.error("Error saving config:", e);
-    }
-};
+
 // Simulated API calls
 const fetchUsers = async () => {
     try {
@@ -320,9 +291,13 @@ watch(
             // Add a subtle shake animation to the message element
             const messageElement = document.querySelector(".message-container");
             if (messageElement) {
-                messageElement.classList.add("shake-animation");
+                messageElement.classList.add(
+                    "animate-[shake_0.5s_cubic-bezier(0.36,0.07,0.19,0.97)_both]"
+                );
                 setTimeout(() => {
-                    messageElement.classList.remove("shake-animation");
+                    messageElement.classList.remove(
+                        "animate-[shake_0.5s_cubic-bezier(0.36,0.07,0.19,0.97)_both]"
+                    );
                 }, 500);
             }
         }
@@ -335,7 +310,7 @@ watch(
         sessions.value.forEach((session) => {
             if (session.name === newSession) {
                 config.value.defaultSession = newSession;
-                saveConfig();
+                saveConfig(config.value);
             }
         });
     },
@@ -347,7 +322,7 @@ watch(
         users.value.forEach((user) => {
             if (user.username === newUsername) {
                 config.value.defaultUsername = newUsername;
-                saveConfig();
+                saveConfig(config.value);
             }
         });
     },
@@ -360,8 +335,7 @@ onMounted(async () => {
     if (passwordInputRef.value) {
         passwordInputRef.value.focus();
     }
-    await getConfig();
-    document.documentElement.lang = config.value.lang;
+    config.value = await getConfig();
     users.value.forEach((user) => {
         if (user.username === config.value.defaultUsername) {
             selectedUsername.value = user.username;
@@ -375,29 +349,3 @@ onMounted(async () => {
     fetchAvatar();
 });
 </script>
-
-<style scoped>
-@keyframes shake {
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-        transform: translateX(-5px);
-    }
-    20%,
-    40%,
-    60%,
-    80% {
-        transform: translateX(5px);
-    }
-}
-
-.shake-animation {
-    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-</style>
