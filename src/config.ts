@@ -5,6 +5,7 @@ export class Config {
     defaultSession: string = "";
     lang: string = "en";
     zoom: number = 1;
+    nightLightMode: boolean = false;
 }
 export async function getConfig(): Promise<Config> {
     let config = new Config();
@@ -19,7 +20,9 @@ export async function getConfig(): Promise<Config> {
         saveConfig(config);
         return config;
     }
-    return _config;
+    config = Object.assign(config, _config);
+    console.log("Config loaded:", config);
+    return config;
 }
 export async function saveConfig(config: Config) {
     try {

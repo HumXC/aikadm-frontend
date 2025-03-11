@@ -2,7 +2,7 @@
     <div
         class="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-gray-100 p-4"
         tabindex="0"
-        @click="emitEnterLogin"
+        @click="router.push('/login')"
         @keydown="handleKeydown"
         ref="welcomeScreenRef"
     >
@@ -19,14 +19,23 @@
                 <span>to continue</span>
             </div>
         </div>
+        <!-- Settings Button -->
+        <div class="fixed bottom-4 right-4">
+            <button
+                @click="openSettings"
+                class="!bg-transparent text-gray-300 hover:text-white focus:outline-none transition-colors"
+            >
+                <SettingsIcon size="24" />
+            </button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { MousePointerClickIcon } from "lucide-vue-next";
+import { MousePointerClickIcon, SettingsIcon } from "lucide-vue-next";
 import { Config, getConfig } from "../config";
-const emit = defineEmits(["enter-login"]);
+import router from "../router";
 const welcomeScreenRef = ref<HTMLElement | null>(null);
 const currentTime = ref("");
 const currentDate = ref("");
@@ -51,14 +60,13 @@ const updateDateTime = () => {
         day: "numeric",
     });
 };
-
-const emitEnterLogin = () => {
-    emit("enter-login");
+const openSettings = (event: MouseEvent) => {
+    event.stopPropagation();
+    router.push("/settings");
 };
-
 const handleKeydown = (event) => {
     if (event.key === " " || event.key === "Enter") {
-        emitEnterLogin();
+        router.push("/login");
     }
 };
 

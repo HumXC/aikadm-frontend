@@ -5,7 +5,6 @@
         tabindex="0"
     >
         <PowerButtons />
-        <ZoomControl />
         <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-lg overflow-hidden">
             <div class="p-8">
                 <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
@@ -171,11 +170,11 @@ import {
     AlertTriangleIcon,
     InfoIcon,
 } from "lucide-vue-next";
-import PowerButtons from "./PowerButtons.vue";
-import ZoomControl from "./ZoomControl.vue";
+import PowerButtons from "../components/PowerButtons.vue";
 import { GetSessions, GetUserAvatar, GetUsers, Login } from "../wailsjs/go/main/App";
 import { Quit } from "../wailsjs/runtime/runtime";
 import { Config, getConfig, saveConfig } from "../config";
+import router from "../router";
 // State
 const users = ref<{ id: number; username: string }[]>([]);
 const sessions = ref<{ id: number; name: string }[]>([]);
@@ -186,7 +185,6 @@ const selectedAvatar = ref("");
 const showPassword = ref(false);
 const isLoading = ref(false);
 const message = ref({ type: "info", text: "" });
-const emit = defineEmits(["enter-welcome"]);
 const passwordInputRef = ref<HTMLElement | null>(null);
 const config = ref(new Config());
 
@@ -203,13 +201,9 @@ const fetchUsers = async () => {
     }
 };
 
-const emitEnterWelcome = () => {
-    emit("enter-welcome");
-};
-
 const handleKeydown = (event) => {
     if (event.key === " " || event.key === "Escape") {
-        emitEnterWelcome();
+        router.back();
     }
 };
 const fetchSessions = async () => {
