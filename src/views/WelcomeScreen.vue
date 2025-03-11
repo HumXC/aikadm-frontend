@@ -77,7 +77,7 @@ onMounted(async () => {
     config.value = await getConfig();
     document.documentElement.lang = config.value.lang;
     updateDateTime();
-    timeInterval = setInterval(updateDateTime, 1000);
+    // timeInterval = setInterval(updateDateTime, 1000);
     if (welcomeScreenRef.value) {
         welcomeScreenRef.value.focus();
     }
@@ -89,22 +89,3 @@ onUnmounted(() => {
     }
 });
 </script>
-
-<style scoped>
-/* Add a subtle pulse animation to the time display */
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.8;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-.text-7xl {
-    animation: pulse 2s infinite ease-in-out;
-}
-</style>
