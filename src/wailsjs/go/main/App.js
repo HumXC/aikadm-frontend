@@ -6,6 +6,10 @@ export function Exec(arg1) {
   return window['go']['main']['App']['Exec'](arg1);
 }
 
+export function ExecOutput(arg1) {
+  return window['go']['main']['App']['ExecOutput'](arg1);
+}
+
 export function GetSessions() {
   return window['go']['main']['App']['GetSessions']();
 }
@@ -16,6 +20,10 @@ export function GetUserAvatar(arg1) {
 
 export function GetUsers() {
   return window['go']['main']['App']['GetUsers']();
+}
+
+export function KillProcess(arg1) {
+  return window['go']['main']['App']['KillProcess'](arg1);
 }
 
 export function Login(arg1, arg2, arg3) {

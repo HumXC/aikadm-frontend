@@ -9,6 +9,11 @@
 import { applyZoom } from "./common";
 import { getConfig } from "./config";
 import { Exec } from "./wailsjs/go/main/App";
+declare global {
+    interface Window {
+        wlsunset_pid: number;
+    }
+}
 getConfig().then((config) => {
     applyZoom(config.zoom);
     if (config.nightLightMode) {
@@ -22,9 +27,13 @@ getConfig().then((config) => {
             config.lowColorTemp.toString(),
             "-T",
             config.highColorTemp.toString(),
-        ]).catch((err) => {
-            console.error(err);
-        });
+        ])
+            .catch((err) => {
+                console.error(err);
+            })
+            .then((pid) => {
+                window.wlsunset_pid = pid as number;
+            });
     }
 });
 </script>

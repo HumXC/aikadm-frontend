@@ -3,13 +3,17 @@
 import {main} from '../models';
 import {user} from '../models';
 
-export function Exec(arg1:Array<string>):Promise<string>;
+export function Exec(arg1:Array<string>):Promise<number>;
+
+export function ExecOutput(arg1:Array<string>):Promise<string>;
 
 export function GetSessions():Promise<Array<main.SessionEntry>>;
 
 export function GetUserAvatar(arg1:string):Promise<string>;
 
 export function GetUsers():Promise<Array<user.User>>;
+
+export function KillProcess(arg1:number):Promise<void>;
 
 export function Login(arg1:string,arg2:string,arg3:string):Promise<void>;
 
