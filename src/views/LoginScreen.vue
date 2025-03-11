@@ -172,7 +172,7 @@ import {
 } from "lucide-vue-next";
 import PowerButtons from "../components/PowerButtons.vue";
 import { GetSessions, GetUserAvatar, GetUsers, KillProcess, Login } from "../wailsjs/go/main/App";
-import { Quit } from "../wailsjs/runtime/runtime";
+import { LogInfo, Quit } from "../wailsjs/runtime/runtime";
 import { Config, getConfig, saveConfig } from "../config";
 import router from "../router";
 // State
@@ -269,7 +269,7 @@ const handleLogin = async () => {
         });
 
         message.value = { type: "info", text: "Login successful! Redirecting..." };
-        if (window.wlsunset_pid !== 0) await KillProcess(window.wlsunset_pid);
+        if (window.wlsunset_pid) await KillProcess(window.wlsunset_pid);
         Quit();
     } catch (error) {
         message.value = { type: "error", text: error || "Login failed. Please try again." };
