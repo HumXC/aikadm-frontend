@@ -8,7 +8,7 @@ buildNpmPackage {
 
   src = ./.;
 
-  npmDepsHash = "sha256-ns1kJmpmQXvQ0RItcrvjS/CdTCgqgFuz7gADnFQGKp4=";
+  npmDepsHash = "sha256-cgijVq16NE/HiyeZddRNpKx6dOKZzg3PMa8LDLEIDp8=";
 
   makeCacheWritable = true;
 
