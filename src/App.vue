@@ -5,7 +5,29 @@
         </transition>
     </div>
 </template>
-
+<script setup lang="ts">
+import { applyZoom } from "./common";
+import { getConfig } from "./config";
+import { Exec } from "./wailsjs/go/main/App";
+getConfig().then((config) => {
+    applyZoom(config.zoom);
+    if (config.nightLightMode) {
+        Exec([
+            "wlsunset",
+            "-l",
+            config.latitude,
+            "-L",
+            config.longitude,
+            "-t",
+            config.lowColorTemp.toString(),
+            "-T",
+            config.highColorTemp.toString(),
+        ]).catch((err) => {
+            console.error(err);
+        });
+    }
+});
+</script>
 <style>
 .fade-enter-active,
 .fade-leave-active {

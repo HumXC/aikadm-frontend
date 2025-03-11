@@ -1,22 +1,6 @@
-export namespace desktop {
+export namespace main {
 	
-	export class Action {
-	    Name: string;
-	    Icon: string;
-	    Exec: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Action(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.Name = source["Name"];
-	        this.Icon = source["Icon"];
-	        this.Exec = source["Exec"];
-	    }
-	}
-	export class Entry {
+	export class SessionEntry {
 	    Type: number;
 	    Version: string;
 	    Name: string;
@@ -33,7 +17,7 @@ export namespace desktop {
 	    Exec: string;
 	    Path: string;
 	    Terminal: boolean;
-	    Actions: Action[];
+	    Actions: desktop.Action[];
 	    MimeType: string[];
 	    Categories: string[];
 	    Implements: string[];
@@ -41,9 +25,11 @@ export namespace desktop {
 	    StartupNotify: boolean;
 	    StartupWMClass: string;
 	    X: Record<string, any>;
+	    Type: string;
+	    SessionType: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new Entry(source);
+	        return new SessionEntry(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -64,7 +50,7 @@ export namespace desktop {
 	        this.Exec = source["Exec"];
 	        this.Path = source["Path"];
 	        this.Terminal = source["Terminal"];
-	        this.Actions = this.convertValues(source["Actions"], Action);
+	        this.Actions = this.convertValues(source["Actions"], desktop.Action);
 	        this.MimeType = source["MimeType"];
 	        this.Categories = source["Categories"];
 	        this.Implements = source["Implements"];
@@ -72,6 +58,8 @@ export namespace desktop {
 	        this.StartupNotify = source["StartupNotify"];
 	        this.StartupWMClass = source["StartupWMClass"];
 	        this.X = source["X"];
+	        this.Type = source["Type"];
+	        this.SessionType = source["SessionType"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

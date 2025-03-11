@@ -65,6 +65,9 @@ const openSettings = (event: MouseEvent) => {
     router.push("/settings");
 };
 const handleKeydown = (event) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+        console.log("Current position:", position);
+    });
     if (event.key === " " || event.key === "Enter") {
         router.push("/login");
     }
@@ -73,22 +76,14 @@ const handleKeydown = (event) => {
 onMounted(async () => {
     config.value = await getConfig();
     document.documentElement.lang = config.value.lang;
-    let zoom = config.value.zoom;
-    document.documentElement.style.fontSize = `${zoom * 16}px`;
-    // Update time immediately
     updateDateTime();
-
-    // Update time every second
     timeInterval = setInterval(updateDateTime, 1000);
-
-    // Focus the welcome screen to capture keyboard events
     if (welcomeScreenRef.value) {
         welcomeScreenRef.value.focus();
     }
 });
 
 onUnmounted(() => {
-    // Clear interval when component is destroyed
     if (timeInterval) {
         clearInterval(timeInterval);
     }
