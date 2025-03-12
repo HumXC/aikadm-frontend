@@ -1,0 +1,66 @@
+name: Auto Build and Release
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+concurrency:
+    group: "pages"
+    cancel-in-progress: true
+jobs:
+    build-release-deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            id-token: write
+            pages: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+            - name: Install dependencies
+              run: npm ci
+            - name: Build
+              run: npm run build
+            - name: Get Latest Commit Hash
+              id: commit
+              run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+            - name: Archive dist folder
+              run: tar -czf html-greet-frontend.tar.gz -C dist .
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tag_name: latest
+                  name: "Latest Release (${{ env.sha_short }})"
+                  body: "自动发布于 commit: ${{ env.sha_short }}"
+                  draft: false
+                  prerelease: false
+                  files: html-greet-frontend.tar.gz
+
+            - name: Delete Old Releases
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  tags=$(gh release list --json tagName --jq '.[].tagName' | grep -v latest | tail -n +4)
+                  echo "$tags" | xargs --no-run-if-empty -I {} gh release delete {} --yes
+                  echo "$tags" | xargs --no-run-if-empty -I {} gh api --method DELETE /repos/${{ github.repository }}/git/refs/tags/{}
+
+            - name: Change base
+              run: sed -i 's|"/|"/html-greet-frontend/|g' base.js
+            - name: Build
+              run: npm run build
+            - name: Setup Pages
+              uses: actions/configure-pages@v4
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: "./dist"
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
