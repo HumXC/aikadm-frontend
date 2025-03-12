@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "./views/LoginScreen.vue";
 import SettingsScreen from "./views/SettingsScreen.vue";
 import WelcomeScreen from "./views/WelcomeScreen.vue";
+import base from "../base";
 
 const routes = [
     { path: "/", name: "welcome", component: WelcomeScreen },
@@ -10,7 +11,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory("/html-greet-frontend/"),
+    history: createWebHistory(base),
     routes,
 });
 
