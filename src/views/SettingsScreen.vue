@@ -159,7 +159,7 @@
                     <div class="flex items-center space-x-4">
                         <button
                             @click="decrementZoom"
-                            class="w-10 h-10 flex items-center justify-center hover:!bg-gray-600 !bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
+                            class="w-10 h-10 flex items-center justify-center hover:!bg-gray-600 !bg-gray-700 rounded-full transition-colors"
                             :disabled="zoom <= 10"
                         >
                             <MinusIcon size="18" :class="{ 'opacity-50': zoom <= 10 }" />
@@ -179,7 +179,7 @@
 
                         <button
                             @click="incrementZoom"
-                            class="w-10 h-10 flex items-center justify-center hover:!bg-gray-600 !bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
+                            class="w-10 h-10 flex items-center justify-center hover:!bg-gray-600 !bg-gray-700 rounded-full transition-colors"
                             :disabled="zoom >= 400"
                         >
                             <PlusIcon size="18" :class="{ 'opacity-50': zoom >= 400 }" />
@@ -202,7 +202,7 @@
                 <!-- Back Button -->
                 <button
                     @click="goBack"
-                    class="mt-8 px-6 py-3 !bg-gray-800 hover:!bg-gray-700 hover:bg-gray-700 rounded-lg transition-colors flex items-center space-x-2"
+                    class="mt-8 px-6 py-3 !bg-gray-800 hover:!bg-gray-700 rounded-lg transition-colors flex items-center space-x-2"
                 >
                     <ArrowLeftIcon size="18" />
                     <span>Back</span>

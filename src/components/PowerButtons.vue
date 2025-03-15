@@ -21,11 +21,11 @@
 
 <script setup lang="ts">
 import { PowerIcon, RefreshCwIcon } from "lucide-vue-next";
-import { Shutdown, Reboot } from "../wailsjs/go/main/App";
+import { HtmlGreet } from "../bindings/github.com/HumXC/html-greet";
 
 const handleShutdown = async () => {
     try {
-        await Shutdown();
+        await HtmlGreet.Shutdown();
     } catch (error) {
         console.error("Failed to shutdown:", error);
     }
@@ -33,7 +33,7 @@ const handleShutdown = async () => {
 
 const handleRestart = async () => {
     try {
-        await Reboot();
+        await HtmlGreet.Reboot();
     } catch (error) {
         console.error("Failed to restart:", error);
     }

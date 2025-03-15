@@ -8,7 +8,8 @@
 <script setup lang="ts">
 import { applyZoom } from "./common";
 import { getConfig } from "./config";
-import { Exec } from "./wailsjs/go/main/App";
+import { HtmlGreet } from "./bindings/github.com/HumXC/html-greet";
+
 declare global {
     interface Window {
         wlsunset_pid: number;
@@ -17,7 +18,7 @@ declare global {
 getConfig().then((config) => {
     applyZoom(config.zoom);
     if (config.nightLightMode) {
-        Exec([
+        HtmlGreet.Exec([
             "wlsunset",
             "-l",
             config.latitude,

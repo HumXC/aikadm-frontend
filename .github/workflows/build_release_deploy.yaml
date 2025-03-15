@@ -32,6 +32,14 @@ jobs:
             - name: Archive dist folder
               run: tar -czf html-greet-frontend.tar.gz -C dist .
 
+            - name: Delete Old Releases
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  tags="latest"
+                  echo "$tags" | xargs --no-run-if-empty -I {} gh release delete latest --yes
+                  echo "$tags" | xargs --no-run-if-empty -I {} gh api --method DELETE /repos/${{ github.repository }}/git/refs/tags/latest
+
             - name: Create GitHub Release
               uses: softprops/action-gh-release@v2
               with:
@@ -43,21 +51,13 @@ jobs:
                   prerelease: false
                   files: html-greet-frontend.tar.gz
 
-            - name: Delete Old Releases
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                  tags=$(gh release list --json tagName --jq '.[].tagName' | grep -v latest | tail -n +4)
-                  echo "$tags" | xargs --no-run-if-empty -I {} gh release delete {} --yes
-                  echo "$tags" | xargs --no-run-if-empty -I {} gh api --method DELETE /repos/${{ github.repository }}/git/refs/tags/{}
-
             - name: Change base
               run: sed -i 's|"/|"/html-greet-frontend/|g' base.js
             - name: Build
               run: npm run build
             - name: Setup Pages
               uses: actions/configure-pages@v4
-            - name: Upload artifact
+            - name: Upload pages artifact
               uses: actions/upload-pages-artifact@v3
               with:
                   path: "./dist"

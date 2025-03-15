@@ -1,5 +1,5 @@
 import { getLocationFromIP } from "./common";
-import { ReadConfig, SaveConfig } from "./wailsjs/go/main/App";
+import { HtmlGreet } from "./bindings/github.com/HumXC/html-greet";
 export class Config {
     id: string = "github.com/HumXC/html-greet-frontend";
     defaultUsername: string = "";
@@ -16,7 +16,7 @@ export async function getConfig(): Promise<Config> {
     let config = new Config();
     let _config: Config;
     try {
-        _config = await ReadConfig();
+        _config = await HtmlGreet.ReadConfig();
     } catch (e) {
         console.error("Error reading config:", e);
         return config;
@@ -40,7 +40,7 @@ export async function getConfig(): Promise<Config> {
 }
 export async function saveConfig(config: Config) {
     try {
-        await SaveConfig(config);
+        await HtmlGreet.SaveConfig(config);
     } catch (e) {
         console.error("Error saving config:", e);
     }

@@ -171,10 +171,10 @@ import {
     InfoIcon,
 } from "lucide-vue-next";
 import PowerButtons from "../components/PowerButtons.vue";
-import { GetSessions, GetUserAvatar, GetUsers, KillProcess, Login } from "../wailsjs/go/main/App";
-import { LogInfo, Quit } from "../wailsjs/runtime/runtime";
 import { Config, getConfig, saveConfig } from "../config";
 import router from "../router";
+import { HtmlGreet } from "../bindings/github.com/HumXC/html-greet";
+import { Window } from "@wailsio/runtime";
 // State
 const users = ref<{ id: number; username: string }[]>([]);
 const sessions = ref<{ id: number; name: string }[]>([]);
@@ -191,7 +191,7 @@ const config = ref(new Config());
 // Simulated API calls
 const fetchUsers = async () => {
     try {
-        let _users = await GetUsers();
+        let _users = await HtmlGreet.GetUsers();
         _users.forEach((user, i) => {
             users.value.push({ id: i + 1, username: user.Username });
         });
@@ -208,7 +208,7 @@ const handleKeydown = (event) => {
 };
 const fetchSessions = async () => {
     try {
-        let _sessions = await GetSessions();
+        let _sessions = await HtmlGreet.GetSessions();
         _sessions.forEach((session, i) => {
             sessions.value.push({ id: i + 1, name: session.Name });
         });
@@ -225,7 +225,7 @@ const fetchAvatar = async () => {
     }
 
     try {
-        let _avatar = await GetUserAvatar(selectedUsername.value);
+        let _avatar = await HtmlGreet.GetUserAvatar(selectedUsername.value);
         selectedAvatar.value = `data:image/png;base64,${_avatar}`;
     } catch (error) {
         selectedAvatar.value = `https://ui-avatars.com/api/?name=${selectedUsername.value}&background=random&color=fff&size=128`;
@@ -261,7 +261,7 @@ const handleLogin = async () => {
         let username = selectedUsername.value.toString();
         let password_ = password.value.toString();
         let session = selectedSession.value.toString();
-        await Login(username, password_, session);
+        await HtmlGreet.Login(username, password_, session);
 
         console.log("Login successful", {
             username: selectedUsername.value,
@@ -269,8 +269,8 @@ const handleLogin = async () => {
         });
 
         message.value = { type: "info", text: "Login successful! Redirecting..." };
-        if (window.wlsunset_pid) await KillProcess(window.wlsunset_pid);
-        Quit();
+        if (window.wlsunset_pid) await HtmlGreet.KillProcess(window.wlsunset_pid);
+        Window.Close();
     } catch (error) {
         message.value = { type: "error", text: error || "Login failed. Please try again." };
     } finally {
