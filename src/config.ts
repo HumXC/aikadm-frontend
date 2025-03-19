@@ -1,7 +1,7 @@
 import { getLocationFromIP } from "./common";
-import { HtmlGreet } from "./bindings/github.com/HumXC/html-greet";
+import { Aikadm } from "./bindings/github.com/HumXC/aikadm";
 export class Config {
-    id: string = "github.com/HumXC/html-greet-frontend";
+    id: string = "github.com/HumXC/aikadm-frontend";
     defaultUsername: string = "";
     defaultSession: string = "";
     lang: string = "en";
@@ -16,7 +16,7 @@ export async function getConfig(): Promise<Config> {
     let config = new Config();
     let _config: Config;
     try {
-        _config = await HtmlGreet.ReadConfig();
+        _config = await Aikadm.ReadConfig();
     } catch (e) {
         console.error("Error reading config:", e);
         return config;
@@ -40,7 +40,7 @@ export async function getConfig(): Promise<Config> {
 }
 export async function saveConfig(config: Config) {
     try {
-        await HtmlGreet.SaveConfig(config);
+        await Aikadm.SaveConfig(config);
     } catch (e) {
         console.error("Error saving config:", e);
     }

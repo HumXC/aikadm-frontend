@@ -21,11 +21,11 @@
 
 <script setup lang="ts">
 import { PowerIcon, RefreshCwIcon } from "lucide-vue-next";
-import { HtmlGreet } from "../bindings/github.com/HumXC/html-greet";
+import { Aikadm } from "../bindings/github.com/HumXC/aikadm";
 
 const handleShutdown = async () => {
     try {
-        await HtmlGreet.Shutdown();
+        await Aikadm.Shutdown();
     } catch (error) {
         console.error("Failed to shutdown:", error);
     }
@@ -33,7 +33,7 @@ const handleShutdown = async () => {
 
 const handleRestart = async () => {
     try {
-        await HtmlGreet.Reboot();
+        await Aikadm.Reboot();
     } catch (error) {
         console.error("Failed to restart:", error);
     }

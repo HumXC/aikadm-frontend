@@ -19,7 +19,7 @@ import * as $models from "./models.js";
  * @returns {Promise<number> & { cancel(): void }}
  */
 export function Exec(command) {
-    let $resultPromise = /** @type {any} */($Call.ByID(1778317327, command));
+    let $resultPromise = /** @type {any} */($Call.ByID(3462735578, command));
     return $resultPromise;
 }
 
@@ -28,7 +28,7 @@ export function Exec(command) {
  * @returns {Promise<string> & { cancel(): void }}
  */
 export function ExecOutput(command) {
-    let $resultPromise = /** @type {any} */($Call.ByID(2051039330, command));
+    let $resultPromise = /** @type {any} */($Call.ByID(3710783019, command));
     return $resultPromise;
 }
 
@@ -36,7 +36,7 @@ export function ExecOutput(command) {
  * @returns {Promise<$models.SessionEntry[]> & { cancel(): void }}
  */
 export function GetSessions() {
-    let $resultPromise = /** @type {any} */($Call.ByID(2428919699));
+    let $resultPromise = /** @type {any} */($Call.ByID(3032817680));
     let $typingPromise = /** @type {any} */($resultPromise.then(($result) => {
         return $$createType1($result);
     }));
@@ -49,7 +49,7 @@ export function GetSessions() {
  * @returns {Promise<string> & { cancel(): void }}
  */
 export function GetUserAvatar(username) {
-    let $resultPromise = /** @type {any} */($Call.ByID(1857594944, username));
+    let $resultPromise = /** @type {any} */($Call.ByID(4285956991, username));
     return $resultPromise;
 }
 
@@ -57,7 +57,7 @@ export function GetUserAvatar(username) {
  * @returns {Promise<user$0.User[]> & { cancel(): void }}
  */
 export function GetUsers() {
-    let $resultPromise = /** @type {any} */($Call.ByID(3108643398));
+    let $resultPromise = /** @type {any} */($Call.ByID(650693767));
     let $typingPromise = /** @type {any} */($resultPromise.then(($result) => {
         return $$createType3($result);
     }));
@@ -70,7 +70,7 @@ export function GetUsers() {
  * @returns {Promise<void> & { cancel(): void }}
  */
 export function KillProcess(pid) {
-    let $resultPromise = /** @type {any} */($Call.ByID(3428727195, pid));
+    let $resultPromise = /** @type {any} */($Call.ByID(3398363060, pid));
     return $resultPromise;
 }
 
@@ -81,7 +81,7 @@ export function KillProcess(pid) {
  * @returns {Promise<void> & { cancel(): void }}
  */
 export function Login(username, password, session) {
-    let $resultPromise = /** @type {any} */($Call.ByID(1502476215, username, password, session));
+    let $resultPromise = /** @type {any} */($Call.ByID(3688515196, username, password, session));
     return $resultPromise;
 }
 
@@ -89,7 +89,7 @@ export function Login(username, password, session) {
  * @returns {Promise<any> & { cancel(): void }}
  */
 export function ReadConfig() {
-    let $resultPromise = /** @type {any} */($Call.ByID(1758092788));
+    let $resultPromise = /** @type {any} */($Call.ByID(172711337));
     return $resultPromise;
 }
 
@@ -97,7 +97,7 @@ export function ReadConfig() {
  * @returns {Promise<void> & { cancel(): void }}
  */
 export function Reboot() {
-    let $resultPromise = /** @type {any} */($Call.ByID(3200098067));
+    let $resultPromise = /** @type {any} */($Call.ByID(2879686282));
     return $resultPromise;
 }
 
@@ -106,7 +106,7 @@ export function Reboot() {
  * @returns {Promise<void> & { cancel(): void }}
  */
 export function SaveConfig(config) {
-    let $resultPromise = /** @type {any} */($Call.ByID(2284703341, config));
+    let $resultPromise = /** @type {any} */($Call.ByID(1481722156, config));
     return $resultPromise;
 }
 
@@ -114,7 +114,7 @@ export function SaveConfig(config) {
  * @returns {Promise<void> & { cancel(): void }}
  */
 export function Shutdown() {
-    let $resultPromise = /** @type {any} */($Call.ByID(2861731876));
+    let $resultPromise = /** @type {any} */($Call.ByID(3462897229));
     return $resultPromise;
 }
 

@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { applyZoom } from "./common";
 import { getConfig } from "./config";
-import { HtmlGreet } from "./bindings/github.com/HumXC/html-greet";
+import { Aikadm } from "./bindings/github.com/HumXC/aikadm";
 
 declare global {
     interface Window {
@@ -18,7 +18,7 @@ declare global {
 getConfig().then((config) => {
     applyZoom(config.zoom);
     if (config.nightLightMode) {
-        HtmlGreet.Exec([
+        Aikadm.Exec([
             "wlsunset",
             "-l",
             config.latitude,

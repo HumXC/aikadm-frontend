@@ -30,7 +30,7 @@ jobs:
               id: commit
               run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
             - name: Archive dist folder
-              run: tar -czf html-greet-frontend.tar.gz -C dist .
+              run: tar -czf aikadm-frontend.tar.gz -C dist .
 
             - name: Delete Old Releases
               env:
@@ -49,10 +49,10 @@ jobs:
                   body: "自动发布于 commit: ${{ env.sha_short }}"
                   draft: false
                   prerelease: false
-                  files: html-greet-frontend.tar.gz
+                  files: aikadm-frontend.tar.gz
 
             - name: Change base
-              run: sed -i 's|"/|"/html-greet-frontend/|g' base.js
+              run: sed -i 's|"/|"/aikadm-frontend/|g' base.js
             - name: Build
               run: npm run build
             - name: Setup Pages

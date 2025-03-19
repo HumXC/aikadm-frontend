@@ -12,8 +12,8 @@
     packages = forAllSystems (system: let
       pkgs = import nixpkgs {inherit system;};
     in rec {
-      default = html-greet-frontend;
-      html-greet-frontend = pkgs.callPackage ./package.nix {};
+      default = aikadm-frontend;
+      aikadm-frontend = pkgs.callPackage ./package.nix {};
     });
     devShells = forAllSystems (system: let
       pkgs = import nixpkgs {inherit system;};
