@@ -16,3 +16,4 @@ export async function getLocationFromIP(): Promise<{ latitude: number; longitude
         return null;
     }
 }
+export const Styles = ["center-card", "left-card"];

@@ -1,20 +1,20 @@
 <template>
-    <div class="min-h-screen bg-gray-900 text-gray-100 overflow-hidden">
+    <div class="bg-gray-900/98 text-gray-100 overflow-hidden">
         <transition name="fade" mode="out-in">
             <router-view />
         </transition>
     </div>
 </template>
 <script setup lang="ts">
+import { Aikadm } from "@aikadm/aikadm";
 import { applyZoom } from "./common";
 import { getConfig } from "./config";
-import { Aikadm } from "./bindings/github.com/HumXC/aikadm";
-
 declare global {
     interface Window {
         wlsunset_pid: number;
     }
 }
+
 getConfig().then((config) => {
     applyZoom(config.zoom);
     if (config.nightLightMode) {

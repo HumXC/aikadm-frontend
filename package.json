@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@aikadm/aikadm": "^0.0.5",
         "@wailsio/runtime": "^3.0.0-alpha.66",
         "lucide-vue-next": "^0.479.0",
         "vue": "^3.5.13",

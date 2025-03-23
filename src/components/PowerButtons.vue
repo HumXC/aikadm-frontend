@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { PowerIcon, RefreshCwIcon } from "lucide-vue-next";
-import { Aikadm } from "../bindings/github.com/HumXC/aikadm";
+import { Aikadm } from "@aikadm/aikadm";
 
 const handleShutdown = async () => {
     try {

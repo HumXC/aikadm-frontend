@@ -11,9 +11,8 @@
   in {
     packages = forAllSystems (system: let
       pkgs = import nixpkgs {inherit system;};
-    in rec {
-      default = aikadm-frontend;
-      aikadm-frontend = pkgs.callPackage ./package.nix {};
+    in {
+      default = pkgs.callPackage ./package.nix {};
     });
     devShells = forAllSystems (system: let
       pkgs = import nixpkgs {inherit system;};

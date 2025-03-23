@@ -4,11 +4,11 @@
 }:
 buildNpmPackage {
   pname = "aikadm-frontend";
-  version = "0.0.1";
+  version = "0.0.4";
 
   src = ./.;
 
-  npmDepsHash = "sha256-BlAhhkkEbsss/OXyBmpoOCH6/TbmJUpMWgwhecSrGPg=";
+  npmDepsHash = "sha256-/TVCXCwG9LO9Bw+/qlCQ8uHmC49uoZF8AbdDVoAnnsI=";
   makeCacheWritable = true;
   installPhase = ''
     runHook preInstall
