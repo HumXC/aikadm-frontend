@@ -6,7 +6,7 @@
             <!-- Avatar -->
             <div class="flex justify-center mb-6">
                 <div
-                    class="w-32 h-32 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center"
+                    class="w-38 h-38 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center"
                 >
                     <img
                         v-if="selectedAvatar"
@@ -24,13 +24,7 @@
                     <span
                         type="text"
                         :class="{ focus: showUsernameDropdown }"
-                        @click="
-                            (e) => {
-                                e.stopPropagation();
-                                closeAllDropdowns();
-                                showUsernameDropdown = !showUsernameDropdown;
-                            }
-                        "
+                        @click="toggleUsernameDropdown"
                         @focus="showUsernameDropdown = true"
                         class="bg-blur inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
@@ -46,12 +40,12 @@
                     </span>
                     <div
                         v-if="showUsernameDropdown"
-                        class="bg-blur bg-gray-700/20 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
+                        class="bg-blur bg-gray-700/90 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
                     >
                         <div
                             v-for="user in users"
                             @click="selectedUsername = user.username"
-                            class="px-3 py-2 hover:bg-gray-600 cursor-pointer flex justify-between"
+                            class="px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
                         >
                             <span>{{ user.name === "" ? user.username : user.name }}</span>
                             <span class="text-gray-400">{{ user.username }}</span>
@@ -63,13 +57,7 @@
                     <span
                         type="text"
                         :class="{ focus: showSessionDropdown }"
-                        @click="
-                            (e) => {
-                                e.stopPropagation();
-                                closeAllDropdowns();
-                                showSessionDropdown = !showSessionDropdown;
-                            }
-                        "
+                        @click="toggleSessionDropdown"
                         @focus="showSessionDropdown = true"
                         class="bg-blur inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
@@ -85,12 +73,12 @@
                     </span>
                     <div
                         v-if="showSessionDropdown"
-                        class="bg-blur bg-gray-700/20 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
+                        class="bg-blur bg-gray-700/90 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
                     >
                         <div
                             v-for="session in sessions"
                             @click="selectedSession = session.name"
-                            class="px-3 py-2 hover:bg-gray-600 cursor-pointer flex justify-between"
+                            class="px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
                         >
                             <span
                                 class="text-nowrap overflow-hidden overflow-ellipsis whitespace-nowrap"
@@ -121,7 +109,7 @@
                             v-model="password"
                             class="bg-blur w-full px-3 py-2 bg-gray-700/80 rounded-md border border-gray-600 pr-10"
                             required
-                            ref="passwordInputRef"
+                            ref="passwordInput"
                         />
                         <button
                             type="button"
@@ -178,31 +166,31 @@
             'bg-blue-900/50 text-blue-200 border border-blue-700': message.type === 'info',
         }"
     >
-        <div class="flex items-start">
-            <div class="flex-shrink-0 mt-0.5">
-                <AlertCircleIcon v-if="message.type === 'error'" class="h-5 w-5 text-red-400" />
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <AlertCircleIcon v-if="message.type === 'error'" class="h-6 w-6 text-red-400" />
                 <AlertTriangleIcon
                     v-else-if="message.type === 'warning'"
-                    class="h-5 w-5 text-yellow-400"
+                    class="h-6 w-6 text-yellow-400"
                 />
-                <InfoIcon v-else class="h-5 w-5 text-blue-400" />
+                <InfoIcon v-else class="h-6 w-6 text-blue-400" />
             </div>
             <div class="ml-2">{{ message.text }}</div>
         </div>
     </div>
 </template>
-<style lang="css">
+<style scoped>
 .focus {
     outline: none;
     box-shadow: 0 0 0 2px #049185 inset;
     transition: box-shadow 0.05s ease-in-out;
 }
 .bg-blur {
-    backdrop-filter: blur(64px);
+    backdrop-filter: blur(18px);
 }
 </style>
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, Ref, useTemplateRef } from "vue";
 import {
     UserIcon,
     EyeIcon,
@@ -212,7 +200,7 @@ import {
     InfoIcon,
 } from "lucide-vue-next";
 import { Config, getConfig, saveConfig } from "../config";
-import { Aikadm, SessionEntry } from "@aikadm/aikadm";
+import { Aikadm } from "@aikadm/aikadm";
 import { Window } from "@wailsio/runtime";
 const users = ref<{ id: number; username: string; name: string }[]>([]);
 const sessions = ref<{ id: number; name: string; type: string }[]>([]);
@@ -225,12 +213,22 @@ const isLoading = ref(false);
 const showUsernameDropdown = ref(false);
 const showSessionDropdown = ref(false);
 const message = ref({ type: "info", text: "" });
-const passwordInputRef = ref<HTMLElement | null>(null);
+const passwordInputRef = useTemplateRef("passwordInput");
 const config = ref(new Config());
 const closeAllDropdowns = () => {
     showUsernameDropdown.value = false;
     showSessionDropdown.value = false;
 };
+const toggleDropdown = (flag: Ref<boolean, boolean>) => {
+    return (e: MouseEvent) => {
+        let val = flag.value;
+        e.stopPropagation();
+        closeAllDropdowns();
+        flag.value = !val;
+    };
+};
+const toggleUsernameDropdown = toggleDropdown(showUsernameDropdown);
+const toggleSessionDropdown = toggleDropdown(showSessionDropdown);
 const fetchUsers = async () => {
     try {
         let _users = await Aikadm.GetUsers();
@@ -246,12 +244,6 @@ const fetchUsers = async () => {
 const fetchSessions = async () => {
     try {
         let _sessions = await Aikadm.GetSessions();
-        _sessions.push(
-            new SessionEntry({
-                Name: "Default (dsaosdjifodjwoifjdwiof)",
-                SessionType: "Default",
-            })
-        );
         _sessions.forEach((session, i) => {
             sessions.value.push({ id: i + 1, name: session.Name, type: session.SessionType });
         });
@@ -311,9 +303,10 @@ const handleLogin = async () => {
         });
 
         message.value = { type: "info", text: "Login successful! Redirecting..." };
-        if (window.wlsunset_pid) await Aikadm.KillProcess(window.wlsunset_pid);
         Window.Close();
     } catch (error) {
+        passwordInputRef.value?.focus();
+        passwordInputRef.value?.select();
         message.value = { type: "error", text: error || "Login failed. Please try again." };
     } finally {
         isLoading.value = false;

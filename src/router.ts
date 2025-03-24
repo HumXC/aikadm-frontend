@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Settings from "./views/Settings.vue";
 import base from "../base";
+import Settings from "./views/Settings.vue";
 import Welcome from "./views/Welcome.vue";
 import Login from "./views/Login.vue";
 

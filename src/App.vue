@@ -7,36 +7,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import { Aikadm } from "@aikadm/aikadm";
 import { applyZoom } from "./common";
+import Background from "./components/Background.vue";
 import { getConfig } from "./config";
-declare global {
-    interface Window {
-        wlsunset_pid: number;
-    }
-}
 
 getConfig().then((config) => {
     applyZoom(config.zoom);
-    if (config.nightLightMode) {
-        Aikadm.Exec([
-            "wlsunset",
-            "-l",
-            config.latitude,
-            "-L",
-            config.longitude,
-            "-t",
-            config.lowColorTemp.toString(),
-            "-T",
-            config.highColorTemp.toString(),
-        ])
-            .catch((err) => {
-                console.error(err);
-            })
-            .then((pid) => {
-                window.wlsunset_pid = pid as number;
-            });
-    }
 });
 </script>
 <style>

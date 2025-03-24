@@ -1,12 +1,12 @@
 <template>
     <div
-        class="bg-transparent min-h-screen flex flex-col items-center justify-center text-gray-100 p-4"
+        class="bg-transparent min-h-screen text-gray-100 p-4"
         @click="router.push('login')"
         @keydown="handleKeydown"
         tabindex="0"
         ref="box"
     >
-        <DateTime />
+        <DateTime class="absolute -top-1/12 left-0 w-full h-full" />
         <SettingsButton />
     </div>
 </template>
