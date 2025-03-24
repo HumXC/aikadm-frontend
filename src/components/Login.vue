@@ -1,8 +1,6 @@
 <template>
     <div
         class="bg-blur rounded-2xl w-90 shadow-lg h-130 flex flex-col items-center justify-center bg-gray-900/80 text-gray-100 p-4"
-        @keydown="handleKeydown"
-        tabindex="0"
     >
         <div class="p-8">
             <!-- Avatar -->
@@ -48,7 +46,7 @@
                     </span>
                     <div
                         v-if="showUsernameDropdown"
-                        class="bg-blur bg-gray-700/20 absolute z-10 w-full mt-4 rounded-md shadow-lg max-h-60 overflow-auto"
+                        class="bg-blur bg-gray-700/20 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
                     >
                         <div
                             v-for="user in users"
@@ -87,14 +85,17 @@
                     </span>
                     <div
                         v-if="showSessionDropdown"
-                        class="bg-blur bg-gray-700/20 absolute z-10 w-full mt-4 rounded-md shadow-lg max-h-60 overflow-auto"
+                        class="bg-blur bg-gray-700/20 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
                     >
                         <div
                             v-for="session in sessions"
                             @click="selectedSession = session.name"
                             class="px-3 py-2 hover:bg-gray-600 cursor-pointer flex justify-between"
                         >
-                            <span>{{ session.name }}</span>
+                            <span
+                                class="text-nowrap overflow-hidden overflow-ellipsis whitespace-nowrap"
+                                >{{ session.name }}</span
+                            >
                             <span class="text-gray-400">{{ session.type }}</span>
                         </div>
                     </div>
@@ -166,29 +167,27 @@
                 </button>
             </form>
         </div>
-
-        <!-- Message Display -->
-        <div
-            v-if="message.text"
-            class="message-container fixed bottom-10 w-90 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 rounded-md text-sm transition-all duration-300"
-            :class="{
-                'bg-red-900/50 text-red-200 border border-red-700': message.type === 'error',
-                'bg-yellow-900/50 text-yellow-200 border border-yellow-700':
-                    message.type === 'warning',
-                'bg-blue-900/50 text-blue-200 border border-blue-700': message.type === 'info',
-            }"
-        >
-            <div class="flex items-start">
-                <div class="flex-shrink-0 mt-0.5">
-                    <AlertCircleIcon v-if="message.type === 'error'" class="h-5 w-5 text-red-400" />
-                    <AlertTriangleIcon
-                        v-else-if="message.type === 'warning'"
-                        class="h-5 w-5 text-yellow-400"
-                    />
-                    <InfoIcon v-else class="h-5 w-5 text-blue-400" />
-                </div>
-                <div class="ml-2">{{ message.text }}</div>
+    </div>
+    <!-- Message Display -->
+    <div
+        v-if="message.text"
+        class="message-container fixed bottom-10 w-90 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 rounded-md text-sm transition-all duration-300"
+        :class="{
+            'bg-red-900/50 text-red-200 border border-red-700': message.type === 'error',
+            'bg-yellow-900/50 text-yellow-200 border border-yellow-700': message.type === 'warning',
+            'bg-blue-900/50 text-blue-200 border border-blue-700': message.type === 'info',
+        }"
+    >
+        <div class="flex items-start">
+            <div class="flex-shrink-0 mt-0.5">
+                <AlertCircleIcon v-if="message.type === 'error'" class="h-5 w-5 text-red-400" />
+                <AlertTriangleIcon
+                    v-else-if="message.type === 'warning'"
+                    class="h-5 w-5 text-yellow-400"
+                />
+                <InfoIcon v-else class="h-5 w-5 text-blue-400" />
             </div>
+            <div class="ml-2">{{ message.text }}</div>
         </div>
     </div>
 </template>
@@ -213,8 +212,7 @@ import {
     InfoIcon,
 } from "lucide-vue-next";
 import { Config, getConfig, saveConfig } from "../config";
-import router from "../router";
-import { Aikadm } from "@aikadm/aikadm";
+import { Aikadm, SessionEntry } from "@aikadm/aikadm";
 import { Window } from "@wailsio/runtime";
 const users = ref<{ id: number; username: string; name: string }[]>([]);
 const sessions = ref<{ id: number; name: string; type: string }[]>([]);
@@ -236,7 +234,6 @@ const closeAllDropdowns = () => {
 const fetchUsers = async () => {
     try {
         let _users = await Aikadm.GetUsers();
-        console.log(_users);
         _users.forEach((user, i) => {
             users.value.push({ id: i + 1, username: user.Username, name: user.Name });
         });
@@ -246,15 +243,15 @@ const fetchUsers = async () => {
     }
 };
 
-const handleKeydown = (event) => {
-    if (event.key === " " || event.key === "Escape") {
-        message.value = { type: "info", text: "" };
-        router.back();
-    }
-};
 const fetchSessions = async () => {
     try {
         let _sessions = await Aikadm.GetSessions();
+        _sessions.push(
+            new SessionEntry({
+                Name: "Default (dsaosdjifodjwoifjdwiof)",
+                SessionType: "Default",
+            })
+        );
         _sessions.forEach((session, i) => {
             sessions.value.push({ id: i + 1, name: session.Name, type: session.SessionType });
         });
@@ -389,5 +386,6 @@ onMounted(async () => {
     });
     fetchAvatar();
 });
+
 document.addEventListener("click", closeAllDropdowns);
 </script>

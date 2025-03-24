@@ -1,5 +1,6 @@
 <template>
     <div class="bg-gray-900/98 text-gray-100 overflow-hidden">
+        <Background />
         <transition name="fade" mode="out-in">
             <router-view />
         </transition>
