@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full h-full flex flex-col bg-gray-900 text-gray-100 p-8 fixed"
+        class="min-h-screen bg-gray-900 text-gray-100 p-8"
         tabindex="0"
         ref="box"
         @keydown="handleKeydown"
@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import { ref, onMounted, useTemplateRef } from "vue";
 import { MinusIcon, PlusIcon, ArrowLeftIcon } from "lucide-vue-next";
-import { Config, getConfig, saveConfig } from "../config";
+import { Config, GetConfig, SaveConfig } from "../config";
 import router from "../router";
 import { applyZoom } from "../common";
 const zoom = ref(100);
@@ -115,7 +115,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 };
 onMounted(async () => {
     box.value?.focus();
-    config.value = await getConfig();
+    config.value = GetConfig();
     zoom.value = config.value.zoom * 100;
     background.value = config.value.background || "";
 
@@ -148,7 +148,7 @@ const validateAndSaveZoom = () => {
 const saveSettings = async () => {
     config.value.zoom = zoom.value / 100;
     config.value.background = background.value;
-    await saveConfig(config.value);
+    await SaveConfig();
     applyZoom(config.value.zoom);
 };
 </script>

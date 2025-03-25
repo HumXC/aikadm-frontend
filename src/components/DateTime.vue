@@ -8,7 +8,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { Config, getConfig } from "../config";
+import { Config, GetConfig } from "../config";
 const currentTime = ref("");
 const currentDate = ref("");
 const config = ref(new Config());
@@ -34,7 +34,7 @@ const updateDateTime = () => {
 };
 
 onMounted(async () => {
-    config.value = await getConfig();
+    config.value = GetConfig();
     updateDateTime();
     timeInterval = setInterval(updateDateTime, 5000);
 });

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="bg-transparent min-h-screen flex flex-col items-center justify-center text-gray-100 p-4"
+        class="min-h-screen flex flex-col items-center justify-center text-gray-100 p-4"
         @keydown="handleKeydown"
         ref="box"
         tabindex="0"

@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-gray-900/98 text-gray-100 overflow-hidden">
-        <Background />
+    <div class="bg-gray-900/98 text-gray-100 fixed inset-0 overflow-auto">
+        <Background class="fixed -z-10" />
         <transition name="fade" mode="out-in">
             <router-view />
         </transition>
@@ -9,11 +9,8 @@
 <script setup lang="ts">
 import { applyZoom } from "./common";
 import Background from "./components/Background.vue";
-import { getConfig } from "./config";
-
-getConfig().then((config) => {
-    applyZoom(config.zoom);
-});
+import { GetConfig } from "./config";
+applyZoom(GetConfig().zoom);
 </script>
 <style>
 .fade-enter-active,

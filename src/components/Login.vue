@@ -199,7 +199,7 @@ import {
     AlertTriangleIcon,
     InfoIcon,
 } from "lucide-vue-next";
-import { Config, getConfig, saveConfig } from "../config";
+import { Config, GetConfig, SaveConfig } from "../config";
 import { Aikadm } from "@aikadm/aikadm";
 import { Window } from "@wailsio/runtime";
 const users = ref<{ id: number; username: string; name: string }[]>([]);
@@ -340,7 +340,7 @@ watch(
         sessions.value.forEach((session) => {
             if (session.name === newSession) {
                 config.value.defaultSession = newSession;
-                saveConfig(config.value);
+                SaveConfig();
             }
         });
     },
@@ -352,7 +352,7 @@ watch(
         users.value.forEach((user) => {
             if (user.username === newUsername) {
                 config.value.defaultUsername = newUsername;
-                saveConfig(config.value);
+                SaveConfig();
             }
         });
         fetchAvatar();
@@ -366,7 +366,7 @@ onMounted(async () => {
     if (passwordInputRef.value) {
         passwordInputRef.value.focus();
     }
-    config.value = await getConfig();
+    config.value = GetConfig();
     users.value.forEach((user) => {
         if (user.username === config.value.defaultUsername) {
             selectedUsername.value = user.username;

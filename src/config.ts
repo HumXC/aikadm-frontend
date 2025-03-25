@@ -6,8 +6,8 @@ export class Config {
     zoom: number = 1;
     background: string = "https://www.todaybing.com/api/today/";
 }
-export async function getConfig(): Promise<Config> {
-    let config = new Config();
+let config = new Config();
+async function GetConfig_(): Promise<Config> {
     let _config: Config;
     try {
         _config = await Aikadm.ReadConfig();
@@ -16,14 +16,19 @@ export async function getConfig(): Promise<Config> {
         return config;
     }
     if (!_config || _config.id !== config.id) {
-        saveConfig(config);
+        SaveConfig();
         return config;
     }
     config = Object.assign(config, _config);
     console.log("Config loaded:", config);
     return config;
 }
-export async function saveConfig(config: Config) {
+await GetConfig_();
+export function GetConfig(): Config {
+    return config;
+}
+
+export async function SaveConfig() {
     try {
         await Aikadm.SaveConfig(config);
     } catch (e) {
