@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col items-center justify-center text-gray-100 p-4 border-0">
         <div class="text-center transform transition-all duration-500 hover:scale-105">
-            <div class="text-8xl font-light mb-4">{{ currentTime }}</div>
+            <div class="text-9xl mb-4">{{ currentTime }}</div>
             <div class="text-3xl font-light mb-8">{{ currentDate }}</div>
         </div>
     </div>

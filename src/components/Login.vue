@@ -26,7 +26,7 @@
                         :class="{ focus: showUsernameDropdown }"
                         @click="toggleUsernameDropdown"
                         @focus="showUsernameDropdown = true"
-                        class="bg-blur inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
+                        class="bg-blur hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
                         {{
                             (() => {
@@ -45,7 +45,7 @@
                         <div
                             v-for="user in users"
                             @click="selectedUsername = user.username"
-                            class="px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
+                            class="hand-cursor px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
                         >
                             <span>{{ user.name === "" ? user.username : user.name }}</span>
                             <span class="text-gray-400">{{ user.username }}</span>
@@ -59,7 +59,7 @@
                         :class="{ focus: showSessionDropdown }"
                         @click="toggleSessionDropdown"
                         @focus="showSessionDropdown = true"
-                        class="bg-blur inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
+                        class="bg-blur hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
                         {{
                             (() => {
@@ -78,7 +78,7 @@
                         <div
                             v-for="session in sessions"
                             @click="selectedSession = session.name"
-                            class="px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
+                            class="hand-cursor px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
                         >
                             <span
                                 class="text-nowrap overflow-hidden overflow-ellipsis whitespace-nowrap"
@@ -114,7 +114,7 @@
                         <button
                             type="button"
                             @click="showPassword = !showPassword"
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center !bg-transparent"
+                            class="absolute inset-y-0 right-0 pr-3 pl-3 flex items-center !bg-transparent"
                         >
                             <EyeIcon v-if="!showPassword" class="h-5 w-5 text-gray-400" />
                             <EyeOffIcon v-else class="h-5 w-5 text-gray-400" />
@@ -187,6 +187,9 @@
 }
 .bg-blur {
     backdrop-filter: blur(18px);
+}
+.hand-cursor {
+    cursor: url(hand-cursor.svg), auto;
 }
 </style>
 <script setup lang="ts">

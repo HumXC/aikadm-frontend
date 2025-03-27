@@ -20,6 +20,7 @@ body {
 }
 * {
     appearance: none !important;
+    cursor: url(cursor.svg), auto;
 }
 *:focus {
     outline: none;

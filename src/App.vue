@@ -12,7 +12,7 @@ import Background from "./components/Background.vue";
 import { GetConfig } from "./config";
 applyZoom(GetConfig().zoom);
 </script>
-<style>
+<style scoped>
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.5s ease, transform 0.5s ease;
