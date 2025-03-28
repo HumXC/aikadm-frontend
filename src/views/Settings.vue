@@ -98,12 +98,11 @@
 <script setup lang="ts">
 import { ref, onMounted, useTemplateRef } from "vue";
 import { MinusIcon, PlusIcon, ArrowLeftIcon } from "lucide-vue-next";
-import { Config, GetConfig, SaveConfig } from "../config";
+import { GetConfig } from "../config";
 import router from "../router";
-import { applyZoom } from "../common";
 const zoom = ref(100);
 const background = ref("");
-const config = ref(new Config());
+const config = ref(GetConfig());
 const showLanguageDropdown = ref(false);
 const showStyleDropdown = ref(false);
 const box = useTemplateRef("box");
@@ -115,7 +114,6 @@ const handleKeydown = (event: KeyboardEvent) => {
 };
 onMounted(async () => {
     box.value?.focus();
-    config.value = GetConfig();
     zoom.value = config.value.zoom * 100;
     background.value = config.value.background || "";
 
@@ -148,8 +146,6 @@ const validateAndSaveZoom = () => {
 const saveSettings = async () => {
     config.value.zoom = zoom.value / 100;
     config.value.background = background.value;
-    await SaveConfig();
-    applyZoom(config.value.zoom);
 };
 </script>
 

@@ -18,9 +18,9 @@ body {
     user-select: none;
     background-color: #242424;
 }
+
 * {
     appearance: none !important;
-    cursor: url(cursor.svg), auto;
 }
 *:focus {
     outline: none;

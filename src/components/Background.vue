@@ -21,11 +21,11 @@
 }
 </style>
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef, watch } from "vue";
+import { ref, useTemplateRef, watch } from "vue";
 const isBackgroundLoaded = ref(false);
-import { Config, GetConfig } from "../config";
+import { GetConfig } from "../config";
 import router from "../router";
-const config = ref(new Config());
+const config = ref(GetConfig());
 const img = useTemplateRef("img");
 watch(
     () => router.currentRoute.value.name,
@@ -37,7 +37,4 @@ watch(
         }
     }
 );
-onMounted(async () => {
-    config.value = GetConfig();
-});
 </script>

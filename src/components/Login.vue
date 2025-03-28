@@ -188,9 +188,6 @@
 .bg-blur {
     backdrop-filter: blur(18px);
 }
-.hand-cursor {
-    cursor: url(hand-cursor.svg), auto;
-}
 </style>
 <script setup lang="ts">
 import { ref, onMounted, watch, Ref, useTemplateRef } from "vue";
@@ -202,7 +199,7 @@ import {
     AlertTriangleIcon,
     InfoIcon,
 } from "lucide-vue-next";
-import { Config, GetConfig, SaveConfig } from "../config";
+import { GetConfig } from "../config";
 import { Aikadm } from "@aikadm/aikadm";
 import { Window } from "@wailsio/runtime";
 const users = ref<{ id: number; username: string; name: string }[]>([]);
@@ -217,7 +214,7 @@ const showUsernameDropdown = ref(false);
 const showSessionDropdown = ref(false);
 const message = ref({ type: "info", text: "" });
 const passwordInputRef = useTemplateRef("passwordInput");
-const config = ref(new Config());
+const config = ref(GetConfig());
 const closeAllDropdowns = () => {
     showUsernameDropdown.value = false;
     showSessionDropdown.value = false;
@@ -343,7 +340,6 @@ watch(
         sessions.value.forEach((session) => {
             if (session.name === newSession) {
                 config.value.defaultSession = newSession;
-                SaveConfig();
             }
         });
     },
@@ -355,7 +351,6 @@ watch(
         users.value.forEach((user) => {
             if (user.username === newUsername) {
                 config.value.defaultUsername = newUsername;
-                SaveConfig();
             }
         });
         fetchAvatar();
@@ -369,7 +364,6 @@ onMounted(async () => {
     if (passwordInputRef.value) {
         passwordInputRef.value.focus();
     }
-    config.value = GetConfig();
     users.value.forEach((user) => {
         if (user.username === config.value.defaultUsername) {
             selectedUsername.value = user.username;

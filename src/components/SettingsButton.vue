@@ -2,7 +2,9 @@
 import { SettingsIcon } from "lucide-vue-next";
 import router from "../router";
 import { GetConfig } from "../config";
-const config = GetConfig();
+import { ref } from "vue";
+const config = ref(GetConfig());
+
 function handleClick(event: MouseEvent) {
     event.stopPropagation();
     router.push("/settings");

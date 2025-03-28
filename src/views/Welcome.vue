@@ -6,7 +6,7 @@
         tabindex="0"
         ref="box"
     >
-        <DateTime class="absolute -top-1/12 left-0 w-full h-full" />
+        <DateTime class="absolute -top-1/6 left-0 w-full h-full" />
         <SettingsButton />
     </div>
 </template>

@@ -7,10 +7,29 @@
     </div>
 </template>
 <script setup lang="ts">
-import { applyZoom } from "./common";
+import { computed, ref, watch } from "vue";
 import Background from "./components/Background.vue";
-import { GetConfig } from "./config";
-applyZoom(GetConfig().zoom);
+import { GetConfig, SaveConfig } from "./config";
+const config = ref(GetConfig());
+watch(config.value, () => {
+    document.documentElement.style.fontSize = `${config.value.zoom * 16}px`;
+    SaveConfig();
+});
+// @ts-ignore
+import cursorContent from "./assets/cursor.svg?raw";
+// @ts-ignore
+import handCursorContent from "./assets/hand-cursor.svg?raw";
+const updateCursor = (content: string) => {
+    const size = 32 * config.value.zoom;
+    const modifiedSVG = content
+        .replace(/width="30px"/, `width="${size}px"`)
+        .replace(/height="30px"/, `height="${size}px"`);
+
+    const encodedSVG = encodeURIComponent(modifiedSVG);
+    return `url("data:image/svg+xml;utf8,${encodedSVG}") 6 2, auto`;
+};
+const cursorURL = computed(() => updateCursor(cursorContent));
+const handCursorURL = computed(() => updateCursor(handCursorContent));
 </script>
 <style scoped>
 .fade-enter-active,
@@ -26,5 +45,13 @@ applyZoom(GetConfig().zoom);
 .fade-leave-to {
     opacity: 0;
     transform: translateY(20px);
+}
+</style>
+<style>
+* {
+    cursor: v-bind("cursorURL");
+}
+.hand-cursor {
+    cursor: v-bind("handCursorURL");
 }
 </style>

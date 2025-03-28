@@ -23,7 +23,8 @@
 import { PowerIcon, RefreshCwIcon } from "lucide-vue-next";
 import { Aikadm } from "@aikadm/aikadm";
 import { GetConfig } from "../config";
-const config = GetConfig();
+import { ref } from "vue";
+const config = ref(GetConfig());
 const handleShutdown = async () => {
     try {
         await Aikadm.Shutdown();
