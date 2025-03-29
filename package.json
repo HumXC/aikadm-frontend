@@ -9,7 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@aikadm/aikadm": "^0.0.6",
+        "@aikadm/aikadm": "^0.0.7",
         "lucide-vue-next": "^0.479.0",
         "vue": "^3.5.13",
         "vue-router": "^4.5.0"

@@ -26,7 +26,7 @@
                         :class="{ focus: showUsernameDropdown }"
                         @click="toggleUsernameDropdown"
                         @focus="showUsernameDropdown = true"
-                        class="bg-blur hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
+                        class="hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
                         {{
                             (() => {
@@ -59,15 +59,14 @@
                         :class="{ focus: showSessionDropdown }"
                         @click="toggleSessionDropdown"
                         @focus="showSessionDropdown = true"
-                        class="bg-blur hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
+                        class="hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
                         {{
                             (() => {
-                                let user = sessions.find((s) => s.name === selectedSession);
-                                if (!user) {
+                                if (selectedSession < 0) {
                                     return "Select session";
                                 }
-                                return user.name;
+                                return sessions[selectedSession].name;
                             })()
                         }}
                     </span>
@@ -77,7 +76,7 @@
                     >
                         <div
                             v-for="session in sessions"
-                            @click="selectedSession = session.name"
+                            @click="selectedSession = session.id"
                             class="hand-cursor px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
                         >
                             <span
@@ -107,7 +106,7 @@
                                 ipt.classList.remove('focus');
                             }"
                             v-model="password"
-                            class="bg-blur w-full px-3 py-2 bg-gray-700/80 rounded-md border border-gray-600 pr-10"
+                            class="w-full px-3 py-2 bg-gray-700/80 rounded-md border border-gray-600 pr-10"
                             required
                             ref="passwordInput"
                         />
@@ -205,7 +204,7 @@ import { Window } from "@wailsio/runtime";
 const users = ref<{ id: number; username: string; name: string }[]>([]);
 const sessions = ref<{ id: number; name: string; type: string }[]>([]);
 const selectedUsername = ref("");
-const selectedSession = ref("");
+const selectedSession = ref(-1);
 const password = ref("");
 const selectedAvatar = ref("");
 const showPassword = ref(false);
@@ -233,7 +232,7 @@ const fetchUsers = async () => {
     try {
         let _users = await Aikadm.GetUsers();
         _users.forEach((user, i) => {
-            users.value.push({ id: i + 1, username: user.Username, name: user.Name });
+            users.value.push({ id: i, username: user.Username, name: user.Name });
         });
     } catch (error) {
         message.value = { type: "error", text: "Failed to load users" };
@@ -245,7 +244,7 @@ const fetchSessions = async () => {
     try {
         let _sessions = await Aikadm.GetSessions();
         _sessions.forEach((session, i) => {
-            sessions.value.push({ id: i + 1, name: session.Name, type: session.SessionType });
+            sessions.value.push({ id: i, name: session.Name, type: session.SessionType });
         });
     } catch (error) {
         message.value = { type: "error", text: "Failed to load sessions" };
@@ -294,7 +293,7 @@ const handleLogin = async () => {
         message.value = { type: "info", text: "Authenticating..." };
         let username = selectedUsername.value.toString();
         let password_ = password.value.toString();
-        let session = selectedSession.value.toString();
+        let session = selectedSession.value;
         await Aikadm.Login(username, password_, session);
 
         console.log("Login successful", {
@@ -337,11 +336,7 @@ watch(
 watch(
     () => selectedSession.value,
     (newSession) => {
-        sessions.value.forEach((session) => {
-            if (session.name === newSession) {
-                config.value.defaultSession = newSession;
-            }
-        });
+        config.value.defaultSession = sessions.value[newSession].name;
     },
     { deep: true }
 );
@@ -369,9 +364,9 @@ onMounted(async () => {
             selectedUsername.value = user.username;
         }
     });
-    sessions.value.forEach((session) => {
+    sessions.value.forEach((session, i) => {
         if (session.name === config.value.defaultSession) {
-            selectedSession.value = session.name;
+            selectedSession.value = i;
         }
     });
     fetchAvatar();
