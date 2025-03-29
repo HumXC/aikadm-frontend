@@ -10,17 +10,22 @@
 import { computed, ref, watch } from "vue";
 import Background from "./components/Background.vue";
 import { GetConfig, SaveConfig } from "./config";
-const config = ref(GetConfig());
-watch(config.value, () => {
-    document.documentElement.style.fontSize = `${config.value.zoom * 16}px`;
-    SaveConfig();
-});
 // @ts-ignore
 import cursorContent from "./assets/cursor.svg?raw";
 // @ts-ignore
 import handCursorContent from "./assets/hand-cursor.svg?raw";
+const config = ref(GetConfig());
+const applyZoom = (zoom: number) => {
+    document.documentElement.style.fontSize = `${zoom * 16}px`;
+};
+watch(config.value, () => {
+    applyZoom(config.value.zoom);
+    SaveConfig();
+});
+applyZoom(config.value.zoom);
+
 const updateCursor = (content: string) => {
-    const size = 32 * config.value.zoom;
+    const size = 30 * config.value.zoom;
     const modifiedSVG = content
         .replace(/width="30px"/, `width="${size}px"`)
         .replace(/height="30px"/, `height="${size}px"`);
