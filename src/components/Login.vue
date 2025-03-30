@@ -22,7 +22,7 @@
                 <!-- Username Selection -->
                 <div class="relative">
                     <input
-                        v-model="userNameInput"
+                        v-model="selectedUsername"
                         type="text"
                         @click="
                             (e) => {
@@ -42,9 +42,12 @@
                         }"
                         @change="(e)=>{
                             const ipt = e.target as HTMLInputElement;
-                            if (!users.find(u => u.name === ipt.value)) {
-                                selectedUsername = ipt.value
-                            } 
+                            const user = users.find(u => u.username === ipt.value);
+                            if ( user){
+                                loginUsername =user.username
+                            } else{
+                                loginUsername = ipt.value
+                            }
                         }"
                         @keydown="showUsernameDropdown = false"
                         placeholder="Select username"
@@ -58,8 +61,8 @@
                             v-for="user in users"
                             @click="
                                 () => {
-                                    selectedUsername = user.username;
-                                    userNameInput = user.name === '' ? user.username : user.name;
+                                    selectedUsername = user.name === '' ? user.username : user.name;
+                                    loginUsername = user.username;
                                     showUsernameDropdown = false;
                                 }
                             "
@@ -236,7 +239,8 @@ const showSessionDropdown = ref(false);
 const message = ref({ type: "info", text: "" });
 const passwordInputRef = useTemplateRef("passwordInput");
 const config = ref(GetConfig());
-const userNameInput = ref("");
+// 登陆时要使用的用户名
+const loginUsername = ref("");
 const closeAllDropdowns = () => {
     showUsernameDropdown.value = false;
     showSessionDropdown.value = false;
@@ -271,13 +275,13 @@ const fetchSessions = async () => {
 };
 
 const fetchAvatar = async () => {
-    if (userNameInput.value === "") return;
-
+    const username = loginUsername.value;
+    if (username === "") return;
     try {
-        let _avatar = await Aikadm.GetUserAvatar(selectedUsername.value);
+        let _avatar = await Aikadm.GetUserAvatar(username);
         selectedAvatar.value = `data:image/png;base64,${_avatar}`;
     } catch (error) {
-        selectedAvatar.value = `https://ui-avatars.com/api/?name=${userNameInput.value}&background=random&color=fff&size=128`;
+        selectedAvatar.value = `https://ui-avatars.com/api/?name=${selectedUsername.value}&background=random&color=fff&size=128`;
     }
 };
 
@@ -286,7 +290,7 @@ const handleLogin = async () => {
     message.value = { type: "info", text: "" };
 
     // Validate form fields
-    if (!selectedUsername.value) {
+    if (selectedUsername.value === "") {
         message.value = { type: "error", text: "Please select a username" };
         return;
     }
@@ -296,7 +300,7 @@ const handleLogin = async () => {
         return;
     }
 
-    if (!password.value) {
+    if (password.value === "") {
         message.value = { type: "error", text: "Please enter your password" };
         return;
     }
@@ -306,7 +310,7 @@ const handleLogin = async () => {
     try {
         // Show info message during login
         message.value = { type: "info", text: "Authenticating..." };
-        let username = selectedUsername.value.toString();
+        let username = loginUsername.value;
         let password_ = password.value.toString();
         let session = selectedSession.value;
         await Aikadm.Login(username, password_, session);
@@ -356,15 +360,16 @@ watch(
 );
 watch(
     () => selectedUsername.value,
-    (newUsername) => {
-        users.value.forEach((user) => {
-            if (user.username === newUsername) {
-                config.value.defaultUsername = newUsername;
-            }
-        });
+    (name) => {
+        if (name === "") return;
+        const user = users.value.find((u) => u.name === name);
+        if (user) {
+            config.value.defaultUsername = user.username;
+        } else {
+            config.value.defaultUsername = name;
+        }
         fetchAvatar();
-    },
-    { deep: true }
+    }
 );
 
 onMounted(async () => {
@@ -373,9 +378,12 @@ onMounted(async () => {
     if (passwordInputRef.value) {
         passwordInputRef.value.focus();
     }
+    loginUsername.value = config.value.defaultUsername;
+    selectedUsername.value = config.value.defaultUsername;
     users.value.forEach((user) => {
         if (user.username === config.value.defaultUsername) {
-            selectedUsername.value = user.username;
+            selectedUsername.value = user.name;
+            loginUsername.value = user.username;
         }
     });
     sessions.value.forEach((session, i) => {
@@ -383,7 +391,6 @@ onMounted(async () => {
             selectedSession.value = i;
         }
     });
-    fetchAvatar();
 });
 
 document.addEventListener("click", closeAllDropdowns);
