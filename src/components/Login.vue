@@ -21,30 +21,48 @@
             <form @submit.prevent="handleLogin" class="space-y-4">
                 <!-- Username Selection -->
                 <div class="relative">
-                    <span
+                    <input
+                        v-model="userNameInput"
                         type="text"
-                        :class="{ focus: showUsernameDropdown }"
-                        @click="toggleUsernameDropdown"
-                        @focus="showUsernameDropdown = true"
+                        @click="
+                            (e) => {
+                                e.stopPropagation();
+                                showSessionDropdown = false;
+                                showUsernameDropdown = true;
+                            }
+                        "
+                        @focus="(e)=>{
+                            const ipt = e.target as HTMLInputElement;
+                            showUsernameDropdown = true;
+                            ipt.classList.add('focus');
+                        }"
+                        @blur="(e)=>{ 
+                            const ipt = e.target as HTMLInputElement;
+                            ipt.classList.remove('focus'); 
+                        }"
+                        @change="(e)=>{
+                            const ipt = e.target as HTMLInputElement;
+                            if (!users.find(u => u.name === ipt.value)) {
+                                selectedUsername = ipt.value
+                            } 
+                        }"
+                        @keydown="showUsernameDropdown = false"
+                        placeholder="Select username"
                         class="hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
-                    >
-                        {{
-                            (() => {
-                                let user = users.find((user) => user.username === selectedUsername);
-                                if (!user) {
-                                    return "Select username";
-                                }
-                                return user.name === "" ? user.username : user.name;
-                            })()
-                        }}
-                    </span>
+                    />
                     <div
                         v-if="showUsernameDropdown"
                         class="bg-blur bg-gray-700/90 absolute z-10 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-auto"
                     >
                         <div
                             v-for="user in users"
-                            @click="selectedUsername = user.username"
+                            @click="
+                                () => {
+                                    selectedUsername = user.username;
+                                    userNameInput = user.name === '' ? user.username : user.name;
+                                    showUsernameDropdown = false;
+                                }
+                            "
                             class="hand-cursor px-3 py-2 hover:bg-gray-800/40 cursor-pointer flex justify-between"
                         >
                             <span>{{ user.name === "" ? user.username : user.name }}</span>
@@ -59,16 +77,20 @@
                         :class="{ focus: showSessionDropdown }"
                         @click="toggleSessionDropdown"
                         @focus="showSessionDropdown = true"
+                        v-if="selectedSession < 0"
+                        class="hand-cursor inline-block text-left text-gray-400 w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
+                    >
+                        {{ "Select session" }}
+                    </span>
+                    <span
+                        v-else
+                        type="text"
+                        :class="{ focus: showSessionDropdown }"
+                        @click="toggleSessionDropdown"
+                        @focus="showSessionDropdown = true"
                         class="hand-cursor inline-block text-left w-full px-3 py-2 bg-gray-700/80 rounded cursor-default"
                     >
-                        {{
-                            (() => {
-                                if (selectedSession < 0) {
-                                    return "Select session";
-                                }
-                                return sessions[selectedSession].name;
-                            })()
-                        }}
+                        {{ sessions[selectedSession].name }}
                     </span>
                     <div
                         v-if="showSessionDropdown"
@@ -189,7 +211,7 @@
 }
 </style>
 <script setup lang="ts">
-import { ref, onMounted, watch, Ref, useTemplateRef } from "vue";
+import { ref, onMounted, watch, Ref, useTemplateRef, computed } from "vue";
 import {
     UserIcon,
     EyeIcon,
@@ -214,20 +236,16 @@ const showSessionDropdown = ref(false);
 const message = ref({ type: "info", text: "" });
 const passwordInputRef = useTemplateRef("passwordInput");
 const config = ref(GetConfig());
+const userNameInput = ref("");
 const closeAllDropdowns = () => {
     showUsernameDropdown.value = false;
     showSessionDropdown.value = false;
 };
-const toggleDropdown = (flag: Ref<boolean, boolean>) => {
-    return (e: MouseEvent) => {
-        let val = flag.value;
-        e.stopPropagation();
-        closeAllDropdowns();
-        flag.value = !val;
-    };
+const toggleSessionDropdown = (e: MouseEvent) => {
+    e.stopPropagation();
+    showUsernameDropdown.value = false;
+    showSessionDropdown.value = !showSessionDropdown.value;
 };
-const toggleUsernameDropdown = toggleDropdown(showUsernameDropdown);
-const toggleSessionDropdown = toggleDropdown(showSessionDropdown);
 const fetchUsers = async () => {
     try {
         let _users = await Aikadm.GetUsers();
@@ -253,16 +271,13 @@ const fetchSessions = async () => {
 };
 
 const fetchAvatar = async () => {
-    if (!selectedUsername.value) {
-        selectedAvatar.value = "";
-        return;
-    }
+    if (userNameInput.value === "") return;
 
     try {
         let _avatar = await Aikadm.GetUserAvatar(selectedUsername.value);
         selectedAvatar.value = `data:image/png;base64,${_avatar}`;
     } catch (error) {
-        selectedAvatar.value = `https://ui-avatars.com/api/?name=${selectedUsername.value}&background=random&color=fff&size=128`;
+        selectedAvatar.value = `https://ui-avatars.com/api/?name=${userNameInput.value}&background=random&color=fff&size=128`;
     }
 };
 
@@ -276,7 +291,7 @@ const handleLogin = async () => {
         return;
     }
 
-    if (!selectedSession.value) {
+    if (selectedSession.value < 0) {
         message.value = { type: "error", text: "Please select a session" };
         return;
     }
@@ -311,7 +326,6 @@ const handleLogin = async () => {
         isLoading.value = false;
     }
 };
-
 // Add animation effect when an error message appears
 watch(
     () => message.value,
