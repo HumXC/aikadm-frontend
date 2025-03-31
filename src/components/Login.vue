@@ -214,7 +214,7 @@
 }
 </style>
 <script setup lang="ts">
-import { ref, onMounted, watch, Ref, useTemplateRef, computed } from "vue";
+import { ref, onMounted, watch, Ref, useTemplateRef, computed, onUnmounted } from "vue";
 import {
     UserIcon,
     EyeIcon,
@@ -391,7 +391,9 @@ onMounted(async () => {
             selectedSession.value = i;
         }
     });
+    document.addEventListener("click", closeAllDropdowns);
 });
-
-document.addEventListener("click", closeAllDropdowns);
+onUnmounted(() => {
+    document.removeEventListener("click", closeAllDropdowns);
+});
 </script>

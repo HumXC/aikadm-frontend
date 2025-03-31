@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, useTemplateRef } from "vue";
+import { ref, onMounted, useTemplateRef, onUnmounted } from "vue";
 import { MinusIcon, PlusIcon, ArrowLeftIcon } from "lucide-vue-next";
 import { GetConfig } from "../config";
 import router from "../router";
@@ -112,17 +112,20 @@ const handleKeydown = (event: KeyboardEvent) => {
         router.back();
     }
 };
+const closeAllDropdowns = () => {
+    showLanguageDropdown.value = false;
+    showStyleDropdown.value = false;
+};
 onMounted(async () => {
     box.value?.focus();
     zoom.value = config.value.zoom * 100;
     background.value = config.value.background || "";
 
-    document.addEventListener("click", (e) => {
-        showLanguageDropdown.value = false;
-        showStyleDropdown.value = false;
-    });
+    document.addEventListener("click", closeAllDropdowns);
 });
-
+onUnmounted(() => {
+    document.removeEventListener("click", closeAllDropdowns);
+});
 const incrementZoom = () => {
     if (zoom.value < 400) {
         zoom.value += 10;
