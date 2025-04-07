@@ -1,4 +1,4 @@
-import { Aikadm } from "@aikadm/aikadm";
+import { ReadConfig, SaveConfig as SaveConfig_ } from "@aikadm/aikadm";
 export class Config {
     id: string = "github.com/HumXC/aikadm-frontend";
     defaultUsername: string = "";
@@ -10,7 +10,7 @@ let config = new Config();
 async function GetConfig_(): Promise<Config> {
     let _config: Config;
     try {
-        _config = await Aikadm.ReadConfig();
+        _config = await ReadConfig();
     } catch (e) {
         console.error("Error reading config:", e);
         return config;
@@ -23,14 +23,34 @@ async function GetConfig_(): Promise<Config> {
     console.log("Config loaded:", config);
     return config;
 }
-await GetConfig_();
-export function GetConfig(): Config {
+let isReady = false;
+let readyFunc: (() => void) | null = null;
+
+GetConfig_().then((c) => {
+    config = c;
+    isReady = true;
+    if (readyFunc) {
+        readyFunc();
+    }
+    readyFunc = null;
+});
+function WaitReady() {
+    return new Promise<void>((resolve) => {
+        if (isReady) {
+            resolve();
+        } else {
+            readyFunc = resolve;
+        }
+    });
+}
+export async function GetConfig(): Promise<Config> {
+    await WaitReady();
     return config;
 }
 
 export async function SaveConfig() {
     try {
-        await Aikadm.SaveConfig(config);
+        await SaveConfig_(config);
     } catch (e) {
         console.error("Error saving config:", e);
     }

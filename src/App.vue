@@ -9,12 +9,15 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import Background from "./components/Background.vue";
-import { GetConfig, SaveConfig } from "./config";
+import { Config, GetConfig, SaveConfig } from "./config";
+TestDemoMode;
 // @ts-ignore
 import cursorContent from "./assets/cursor.svg?raw";
 // @ts-ignore
 import handCursorContent from "./assets/hand-cursor.svg?raw";
-const config = ref(GetConfig());
+import { TestDemoMode } from "@aikadm/aikadm/bindings/github.com/HumXC/aikadm/aikadm";
+const config = ref(new Config());
+GetConfig().then((c) => (config.value = c));
 const applyZoom = (zoom: number) => {
     document.documentElement.style.fontSize = `${zoom * 16}px`;
 };

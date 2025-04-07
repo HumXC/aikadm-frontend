@@ -98,15 +98,15 @@
 <script setup lang="ts">
 import { ref, onMounted, useTemplateRef, onUnmounted } from "vue";
 import { MinusIcon, PlusIcon, ArrowLeftIcon } from "lucide-vue-next";
-import { GetConfig } from "../config";
+import { Config, GetConfig } from "../config";
 import router from "../router";
 const zoom = ref(100);
 const background = ref("");
-const config = ref(GetConfig());
+const config = ref(new Config());
 const showLanguageDropdown = ref(false);
 const showStyleDropdown = ref(false);
 const box = useTemplateRef("box");
-
+GetConfig().then((c) => (config.value = c));
 const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
         router.back();

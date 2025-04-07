@@ -21,13 +21,15 @@
 
 <script setup lang="ts">
 import { PowerIcon, RefreshCwIcon } from "lucide-vue-next";
-import { Aikadm } from "@aikadm/aikadm";
-import { GetConfig } from "../config";
+import { Shutdown, Reboot } from "@aikadm/aikadm";
+import { GetConfig, Config } from "../config";
 import { ref } from "vue";
-const config = ref(GetConfig());
+const config = ref(new Config());
+
+GetConfig().then((c) => (config.value = c));
 const handleShutdown = async () => {
     try {
-        await Aikadm.Shutdown();
+        await Shutdown();
     } catch (error) {
         console.error("Failed to shutdown:", error);
     }
@@ -35,7 +37,7 @@ const handleShutdown = async () => {
 
 const handleRestart = async () => {
     try {
-        await Aikadm.Reboot();
+        await Reboot();
     } catch (error) {
         console.error("Failed to restart:", error);
     }

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { SettingsIcon } from "lucide-vue-next";
 import router from "../router";
-import { GetConfig } from "../config";
+import { Config, GetConfig } from "../config";
 import { ref } from "vue";
-const config = ref(GetConfig());
-
+const config = ref(new Config());
+GetConfig().then((c) => (config.value = c));
 function handleClick(event: MouseEvent) {
     event.stopPropagation();
     router.push("/settings");

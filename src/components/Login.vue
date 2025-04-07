@@ -214,7 +214,7 @@
 }
 </style>
 <script setup lang="ts">
-import { ref, onMounted, watch, Ref, useTemplateRef, computed, onUnmounted } from "vue";
+import { ref, onMounted, watch, useTemplateRef, onUnmounted } from "vue";
 import {
     UserIcon,
     EyeIcon,
@@ -223,8 +223,8 @@ import {
     AlertTriangleIcon,
     InfoIcon,
 } from "lucide-vue-next";
-import { GetConfig } from "../config";
-import { Aikadm } from "@aikadm/aikadm";
+import { Config, GetConfig } from "../config";
+import { GetUsers, GetSessions, GetUserAvatar, Login } from "@aikadm/aikadm";
 import { Window } from "@wailsio/runtime";
 const users = ref<{ id: number; username: string; name: string }[]>([]);
 const sessions = ref<{ id: number; name: string; type: string }[]>([]);
@@ -238,7 +238,8 @@ const showUsernameDropdown = ref(false);
 const showSessionDropdown = ref(false);
 const message = ref({ type: "info", text: "" });
 const passwordInputRef = useTemplateRef("passwordInput");
-const config = ref(GetConfig());
+const config = ref(new Config());
+GetConfig().then((c) => (config.value = c));
 // 登陆时要使用的用户名
 const loginUsername = ref("");
 const closeAllDropdowns = () => {
@@ -252,7 +253,7 @@ const toggleSessionDropdown = (e: MouseEvent) => {
 };
 const fetchUsers = async () => {
     try {
-        let _users = await Aikadm.GetUsers();
+        let _users = await GetUsers();
         _users.forEach((user, i) => {
             users.value.push({ id: i, username: user.Username, name: user.Name });
         });
@@ -264,7 +265,7 @@ const fetchUsers = async () => {
 
 const fetchSessions = async () => {
     try {
-        let _sessions = await Aikadm.GetSessions();
+        let _sessions = await GetSessions();
         _sessions.forEach((session, i) => {
             sessions.value.push({ id: i, name: session.Name, type: session.SessionType });
         });
@@ -278,9 +279,10 @@ const fetchAvatar = async () => {
     const username = loginUsername.value;
     if (username === "") return;
     try {
-        let _avatar = await Aikadm.GetUserAvatar(username);
+        let _avatar = await GetUserAvatar(username);
         selectedAvatar.value = `data:image/png;base64,${_avatar}`;
     } catch (error) {
+        // TODO: 增加无网络连接时的处理
         selectedAvatar.value = `https://ui-avatars.com/api/?name=${selectedUsername.value}&background=random&color=fff&size=128`;
     }
 };
@@ -313,7 +315,7 @@ const handleLogin = async () => {
         let username = loginUsername.value;
         let password_ = password.value.toString();
         let session = selectedSession.value;
-        await Aikadm.Login(username, password_, session);
+        await Login(username, password_, session);
 
         console.log("Login successful", {
             username: selectedUsername.value,

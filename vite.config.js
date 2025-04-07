@@ -5,16 +5,4 @@ import base from "./base";
 export default defineConfig({
     plugins: [vue()],
     base: base,
-    optimizeDeps: {
-        esbuildOptions: {
-            supported: {
-                "top-level-await": true,
-            },
-        },
-    },
-    esbuild: {
-        supported: {
-            "top-level-await": true,
-        },
-    },
 });

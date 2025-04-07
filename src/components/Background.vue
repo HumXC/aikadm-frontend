@@ -23,9 +23,10 @@
 <script setup lang="ts">
 import { ref, useTemplateRef, watch } from "vue";
 const isBackgroundLoaded = ref(false);
-import { GetConfig } from "../config";
+import { Config, GetConfig } from "../config";
 import router from "../router";
-const config = ref(GetConfig());
+const config = ref(new Config());
+GetConfig().then((c) => (config.value = c));
 const img = useTemplateRef("img");
 watch(
     () => router.currentRoute.value.name,
